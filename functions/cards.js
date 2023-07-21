@@ -32,12 +32,32 @@ router.post('/', async (req, res) => {
       VALUES (@id, @name, @image_uri, @color_identity, @legality, @type_line)`
     );
     
-    const rowsAffected = result.rowsAffected[0]
+    const rowsAffected = result.rowsAffected[0];
 
-    res.status(201).json({ rowsAffected })
+    res.status(201).json({ rowsAffected });
   } catch (err) {
     res.status(500).json({error: err?.message });
   }
 });
+
+router.delete('/:id', async (req, res) => {
+  try{
+    const cardId = req.params.id;
+    if(!cardId){
+      res.status(404);
+    } else {
+      const request = db.request();
+      request.input('id', sql.UniqueIdentifier, cardId);
+      const result = await request.query(
+        `DELETE FROM Cards WHERE id = @id`
+      );
+      const rowsAffected = result.rowsAffected[0];
+
+      res.status(204).json({ rowsAffected });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err?.message });
+  }
+})
 
 export default router;
