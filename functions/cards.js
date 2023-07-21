@@ -16,6 +16,26 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/:id', async (req, res) => {
+  try{
+    const cardId = req.params.id;
+    if(!cardId){
+      res.status(404);
+    } else {
+      const request = db.request();
+      request.input('id', sql.UniqueIdentifier, cardId);
+      const result = await request.query(
+        `SELECT * FROM Cards WHERE id = @id`
+      );
+      const card = result.recordsets;
+      console.log(card)
+      res.status(200).json(card);
+    }
+  } catch (err) {
+    res.status(500).json({ error: err?.message });
+  }
+})
+
 router.post('/', async (req, res) => {
   try{
     const card = req.body;
