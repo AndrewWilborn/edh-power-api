@@ -27,9 +27,8 @@ router.get('/:id', async (req, res) => {
       const result = await request.query(
         `SELECT * FROM Cards WHERE id = @id`
       );
-      const card = result.recordsets;
-      console.log(card)
-      res.status(20).json(card);
+      const card = result.recordsets[0][0];
+      res.status(200).json(card);
     }
   } catch (err) {
     res.status(500).json({ error: err?.message });
