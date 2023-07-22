@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     const request = db.request();
     const result = await request.query("SELECT * FROM Decks");
     const decks = result.recordsets;
-    res.status(200).json(decks);
+    res.status(200).json(decks[0]);
   } catch (err) {
     res.status(500).json({error: err?.message});
   }

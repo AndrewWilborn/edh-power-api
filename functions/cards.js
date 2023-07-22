@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     const request = db.request();
     const result = await request.query("SELECT * FROM Cards");
     const cards = result.recordsets;
-    res.status(200).json(cards);
+    res.status(200).json(cards[0]);
   } catch (err) {
     res.status(500).json({ error: err?.message });
   }
