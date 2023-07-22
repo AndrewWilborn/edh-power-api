@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
       );
       const card = result.recordsets;
       console.log(card)
-      res.status(200).json(card);
+      res.status(20).json(card);
     }
   } catch (err) {
     res.status(500).json({ error: err?.message });
@@ -56,7 +56,7 @@ router.post('/', async (req, res) => {
 
     res.status(201).json({ rowsAffected });
   } catch (err) {
-    res.status(500).json({error: err?.message });
+    res.status(500).json({ error: err?.message });
   }
 });
 
