@@ -9,7 +9,7 @@ router.use(express.json());
 router.get('/', async (req, res) => {
   try {
     const request = db.request();
-    await request.query();
+    await request.query("delete from cards");
     res.status(200).json({ message: "script run successfully" });
   } catch (err) {
     res.status(500).json({ error: err?.message });
@@ -23,8 +23,7 @@ const createCards = `CREATE TABLE Cards (
   name varchar(192) NOT NULL,
   image_uri varchar(255) NOT NULL,
   color_identity varchar(5) NOT NULL,
-  legality varchar(64) NOT NULL,
-  type_line varchar(255) NOT NULL
+  valid_commander bit NOT NULL
 )`
 
 // Structure for creating decks table

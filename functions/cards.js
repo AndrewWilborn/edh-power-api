@@ -43,12 +43,11 @@ router.post('/', async (req, res) => {
     request.input('name', sql.NVarChar(192), card.name);
     request.input('image_uri', sql.NVarChar(255), card.image_uri);
     request.input('color_identity', sql.NVarChar(5), card.color_identity);
-    request.input('legality', sql.NVarChar(64), card.legality);
-    request.input('type_line', sql.NVarChar(255), card.type_line);
+    request.input('valid_commander', sql.Bit, card.valid_commander)
 
     const result = await request.query(
-      `INSERT INTO Cards (id, name, image_uri, color_identity, legality, type_line)
-      VALUES (@id, @name, @image_uri, @color_identity, @legality, @type_line)`
+      `INSERT INTO Cards (id, name, image_uri, color_identity, valid_commander)
+      VALUES (@id, @name, @image_uri, @color_identity, @valid_commander)`
     );
     
     const rowsAffected = result.rowsAffected[0];
@@ -59,24 +58,24 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
-  try{
-    const cardId = req.params.id;
-    if(!cardId){
-      res.status(404);
-    } else {
-      const request = db.request();
-      request.input('id', sql.UniqueIdentifier, cardId);
-      const result = await request.query(
-        `DELETE FROM Cards WHERE id = @id`
-      );
-      const rowsAffected = result.rowsAffected[0];
+// router.delete('/:id', async (req, res) => {
+//   try{
+//     const cardId = req.params.id;
+//     if(!cardId){
+//       res.status(404);
+//     } else {
+//       const request = db.request();
+//       request.input('id', sql.UniqueIdentifier, cardId);
+//       const result = await request.query(
+//         `DELETE FROM Cards WHERE id = @id`
+//       );
+//       const rowsAffected = result.rowsAffected[0];
 
-      res.status(204).json({ rowsAffected });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err?.message });
-  }
-})
+//       res.status(204).json({ rowsAffected });
+//     }
+//   } catch (err) {
+//     res.status(500).json({ error: err?.message });
+//   }
+// })
 
 export default router;
