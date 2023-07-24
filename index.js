@@ -3,7 +3,7 @@ import cors from 'cors'
 import openapi from './swagger/openapi.js';
 import cards from './functions/cards.js';
 import decks from './functions/decks.js';
-import dev from './dev_scripts/scripts.js';
+import dev from './dev_scripts/tables.js';
 
 const port = process.env.PORT || 3000;
 const app = express();
