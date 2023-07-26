@@ -14,7 +14,6 @@ export async function getAllDecks(req, res){
 }
 
 export async function addDeck(req, res){
-  console.log("Hello There")
   try {
     const deck = req.body;
     const request = db.request();
