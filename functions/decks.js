@@ -33,10 +33,11 @@ router.post('/', async (req, res) => {
     request.input('has_partner', sql.Bit, deck.partner ? 1 : 0);
     // If partner is null then it will default to prismatic piper to keep partner column from being null
     request.input('partner', sql.UniqueIdentifier, deck.partner || "a69e6d8f-f742-4508-a83a-38ae84be228c");
+    request.input('timestamp', sql.BigInt, deck.timestamp);
 
     const result = await request.query(
-      `INSERT INTO Decks (id, owner, commander, deck_name, avg_rating, num_ratings, decklist_url, has_partner, partner)
-      VALUES (@id, @owner, @commander, @deck_name, @avg_rating, @num_ratings, @decklist_url, @has_partner, @partner)`
+      `INSERT INTO Decks (id, owner, commander, deck_name, avg_rating, num_ratings, decklist_url, has_partner, partner, timestamp)
+      VALUES (@id, @owner, @commander, @deck_name, @avg_rating, @num_ratings, @decklist_url, @has_partner, @partner, @timestamp)`
     );
 
     const rowsAffected = result.rowsAffected[0];
