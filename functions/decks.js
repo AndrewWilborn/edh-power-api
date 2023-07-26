@@ -1,12 +1,8 @@
-import express from 'express';
 import db from '../db/dbconnect.js';
 import sql from 'mssql';
 import { uuid } from 'uuidv4';
 
-const router = express.Router();
-router.use(express.json());
-
-router.get('/', async (req, res) => {
+export async function getAllDecks(req, res){
   try {
     const request = db.request();
     const result = await request.query("SELECT * FROM Decks");
@@ -15,16 +11,17 @@ router.get('/', async (req, res) => {
   } catch (err) {
     res.status(500).json({error: err?.message});
   }
-})
+}
 
-router.post('/', async (req, res) => {
+export async function addDeck(req, res){
+  console.log("Hello There")
   try {
     const deck = req.body;
     const request = db.request();
     // TODO generate unique identifier instead of getting it from the body
     request.input('id', sql.UniqueIdentifier, uuid());
     // TODO change owner to a more proper datatype to store firebase user id 
-    request.input('owner', sql.NVarChar(255), deck.owner);
+    request.input('owner', sql.NVarChar(255), req.decodedToken.user_id);
     request.input('commander', sql.UniqueIdentifier, deck.commander);
     request.input('deck_name', sql.NVarChar(255), deck.deck_name);
     request.input('avg_rating', sql.Int, deck.avg_rating);
@@ -46,6 +43,4 @@ router.post('/', async (req, res) => {
   } catch (err) {
     res.status(500).json({error: err?.message});
   }
-})
-
-export default router;
+}

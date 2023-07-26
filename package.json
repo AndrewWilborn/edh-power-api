@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "firebase-admin": "^11.10.1",
     "mssql": "^9.1.1",
     "swagger-ui-express": "^5.0.0",
     "uuidv4": "^6.2.13",

@@ -3,8 +3,6 @@ import db from '../db/dbconnect.js';
 import sql from 'mssql';
 
 const router = express.Router();
-router.use(express.json());
-
 
 // Run dev commands from here
 router.get('/', async (req, res) => {

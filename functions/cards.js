@@ -1,11 +1,7 @@
-import express from 'express';
 import db from '../db/dbconnect.js';
 import sql from 'mssql'
 
-const router = express.Router();
-router.use(express.json());
-
-router.get('/', async (req, res) => {
+export async function getAllCards(req, res){
   try{
     const request = db.request();
     const result = await request.query("SELECT * FROM Cards");
@@ -14,9 +10,8 @@ router.get('/', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err?.message });
   }
-})
-
-router.get('/:id', async (req, res) => {
+}
+export async function getCardById(req, res){
   try{
     const cardId = req.params.id;
     if(!cardId){
@@ -33,9 +28,9 @@ router.get('/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err?.message });
   }
-})
+}
 
-router.post('/', async (req, res) => {
+export async function addCard(req, res){
   try{
     const card = req.body;
     const request = db.request();
@@ -56,9 +51,9 @@ router.post('/', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err?.message });
   }
-});
+}
 
-// router.delete('/:id', async (req, res) => {
+// export async function deleteCard(req, res){
 //   try{
 //     const cardId = req.params.id;
 //     if(!cardId){
@@ -76,6 +71,4 @@ router.post('/', async (req, res) => {
 //   } catch (err) {
 //     res.status(500).json({ error: err?.message });
 //   }
-// })
-
-export default router;
+// }
