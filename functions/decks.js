@@ -13,6 +13,19 @@ export async function getAllDecks(req, res){
   }
 }
 
+export async function getDecksByOwner(req, res){
+  try{
+    const owner = req.params.owner;
+    const request = db.request();
+    request.input('owner', sql.NVarChar(255), owner);
+    const result = await request.query("SELECT * FROM Decks WHERE owner = @owner");
+    const decks = result.recordsets;
+    res.status(200).json(decks[0]);
+  } catch (err) {
+    res.status(500).json({error: err?.message});
+  }
+}
+
 export async function addDeck(req, res){
   try {
     const deck = req.body;
