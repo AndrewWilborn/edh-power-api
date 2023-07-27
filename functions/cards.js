@@ -1,5 +1,5 @@
 import db from '../db/dbconnect.js';
-import sql from 'mssql'
+import sql from 'mssql';
 
 export async function getAllCards(req, res){
   try{
