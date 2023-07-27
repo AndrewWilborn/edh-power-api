@@ -41,13 +41,11 @@ const createCards = `CREATE TABLE Cards (
   name varchar(192) NOT NULL,
   image_uri varchar(255) NOT NULL,
   color_identity varchar(5) NOT NULL,
-  valid_commander bit NOT NULL
-  artist varchar(255)
+  valid_commander bit NOT NULL,
+  artist varchar(255) NOT NULL
 )`
 
 // Structure for creating decks table
-
-// TODO change owner to be a more proper datatype to store firebase user id
 const createDecks = `CREATE TABLE Decks (
   id uniqueidentifier NOT NULL PRIMARY KEY,
   owner varchar(255) NOT NULL,
@@ -59,6 +57,15 @@ const createDecks = `CREATE TABLE Decks (
   has_partner bit,
   partner uniqueidentifier FOREIGN KEY REFERENCES Cards(id),
   timestamp bigint
+)`
+
+// Structure for creating ratings table
+const createRatings = `CREATE TABLE Ratings(
+  id uniqueidentifier NOT NULL PRIMARY KEY,
+  deck_id uniqueidentifier NOT NULL FOREIGN KEY REFERENCES Decks(id),
+  user_id varchar(255) NOT NULL,
+  rating_val int NOT NULL,
+  outdated bit NOT NULL DEFAULT 0
 )`
 
 export default router;
