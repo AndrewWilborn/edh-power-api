@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const request = db.request();
-    await request.query("");
+    await request.query(createRatings);
     res.status(200).json({ message: "script run successfully"});
   } catch (err) {
     res.status(500).json({ error: err?.message });
@@ -65,7 +65,7 @@ const createRatings = `CREATE TABLE Ratings(
   deck_id uniqueidentifier NOT NULL FOREIGN KEY REFERENCES Decks(id),
   user_id varchar(255) NOT NULL,
   rating_val int NOT NULL,
-  outdated bit NOT NULL DEFAULT 0
+  outdated bit
 )`
 
 export default router;
