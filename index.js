@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import openapi from './swagger/openapi.js';
-import { addDeck, getAllDecks, getDecksByOwner } from './functions/decks.js';
+import { addDeck, getAllDecks, getDeckById, getDecksByOwner } from './functions/decks.js';
 import { addCard, getAllCards, getCardById } from './functions/cards.js';
 import dev from './dev_scripts/tables.js';
 import { validToken } from './functions/tokenVerify.js';
@@ -16,6 +16,7 @@ app.use(express.json());
 app.use('/dev', dev);
 
 app.get('/decks', getAllDecks);
+app.get('/deckById/:id', getDeckById);
 app.get('/decks/:owner', getDecksByOwner);
 app.post('/decks', validToken, addDeck);
 

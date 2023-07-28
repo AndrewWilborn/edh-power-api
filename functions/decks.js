@@ -2,19 +2,42 @@ import db from '../db/dbconnect.js';
 import sql from 'mssql';
 import { uuid } from 'uuidv4';
 
-export async function getAllDecks(req, res){
+export async function getAllDecks(req, res) {
   try {
     const request = db.request();
     const result = await request.query("SELECT * FROM Decks");
     const decks = result.recordsets;
     res.status(200).json(decks[0]);
   } catch (err) {
-    res.status(500).json({error: err?.message});
+    res.status(500).json({ error: err?.message });
   }
 }
 
-export async function getDecksByOwner(req, res){
-  try{
+export async function getDeckById(req, res) {
+  try {
+    const deckId = req.params.id;
+    if (!deckId) {
+      res.status(404);
+    } else {
+      const request = db.request();
+      request.input('id', sql.UniqueIdentifier, deckId);
+      const result = await request.query(
+        `SELECT * FROM Decks WHERE id = @id`
+      );
+      const deck = result.recordsets[0][0];
+      if(!deck){
+        res.status(404);
+      }
+      res.status(200).json(deck);
+    }
+  } catch (err) {
+    res.status(500).json({ error: err?.message });
+  }
+}
+
+
+export async function getDecksByOwner(req, res) {
+  try {
     const owner = req.params.owner;
     const request = db.request();
     request.input('owner', sql.NVarChar(255), owner);
@@ -22,11 +45,11 @@ export async function getDecksByOwner(req, res){
     const decks = result.recordsets;
     res.status(200).json(decks[0]);
   } catch (err) {
-    res.status(500).json({error: err?.message});
+    res.status(500).json({ error: err?.message });
   }
 }
 
-export async function addDeck(req, res){
+export async function addDeck(req, res) {
   try {
     const deck = req.body;
     const request = db.request();
@@ -53,6 +76,6 @@ export async function addDeck(req, res){
 
     res.status(201).json({ rowsAffected });
   } catch (err) {
-    res.status(500).json({error: err?.message});
+    res.status(500).json({ error: err?.message });
   }
 }
