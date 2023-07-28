@@ -32,13 +32,19 @@ export async function addRating(req, res) {
     request.input('user_id', sql.NVarChar(255), user);
     request.input('rating_val', sql.Int, ratingVal);
     request.input('outdated', sql.Bit, false);
-    console.log(`INSERT INTO Ratings (id, deck_id, user_id, rating_val, outdated)
-    VALUES (${_uuid}, ${deckId}, ${user}, ${ratingVal}, 0)`)
     const result = await request.query(
-      `INSERT INTO Ratings (id, deck_id, user_id, rating_val, outdated)
-      VALUES (@id, @deck_id, @user_id, @rating_val, @outdated)`
+      `
+      IF ((SELECT COUNT(*) FROM Ratings WHERE deck_id=@deck_id AND user_id=@user_id) = 1)
+      BEGIN
+        UPDATE Ratings SET rating_val=@rating_val, outdated=@outdated WHERE deck_id=@deck_id AND user_id=@user_id
+      END
+      ELSE
+      BEGIN
+        INSERT INTO Ratings (id, deck_id, user_id, rating_val, outdated) VALUES (@id, @deck_id, @user_id, @rating_val, @outdated)
+      END
+      `
     );
-    console.log("finished posting")
+    console.log(result)
 
     // TODO: update average rating
     const rowsAffected = result.rowsAffected[0];
