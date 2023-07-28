@@ -44,12 +44,19 @@ export async function addRating(req, res) {
       END
       `
     );
-    console.log(result)
-
     // TODO: update average rating
+    const updateAvg = db.request();
+    updateAvg.input('deck_id', sql.UniqueIdentifier, deckId);
+    const avgResult = await updateAvg.query(
+      `
+      UPDATE Decks SET avg_rating=(SELECT AVG(rating_val) FROM Ratings WHERE deck_id=@deck_id) WHERE id=@deck_id
+      `
+    )
     const rowsAffected = result.rowsAffected[0];
-    res.status(201).json({ rowsAffected });
+    const rowsAffectedAvg = avgResult.rowsAffected[0];
+    res.status(201).json({ rowsAffected, rowsAffectedAvg });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err?.message });
     return;
   }
