@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // TODO: make this route admin only
-app.use('/dev', dev);
+// app.use('/dev', dev);
 
 app.get('/decks', getAllDecks);
 app.get('/deckById/:id', getDeckById);
@@ -23,7 +23,7 @@ app.post('/decks', validToken, addDeck);
 // app.get('/cards', getAllCards);
 app.get('/cards/:id', getCardById);
 // TODO: make this route admin only
-app.post('/cards', addCard);
+// app.post('/cards', addCard);
 
 app.get('/ratings', getAllRatings);
 app.post('/ratings', validToken, addRating);
