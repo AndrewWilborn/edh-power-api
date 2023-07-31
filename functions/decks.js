@@ -106,7 +106,7 @@ export async function toggleArtById(req, res) {
       await request.query(
         `UPDATE decks SET which_art = '${which_art}', commander = '${cards[which_art].id}' WHERE id = @deckId`
       )
-      res.status(201).json({ which_art, cards })
+      res.status(201).json({ newId: cards[which_art].id })
     }
   } catch (err) {
     console.log(err);
