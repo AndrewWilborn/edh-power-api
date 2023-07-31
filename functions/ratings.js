@@ -41,10 +41,10 @@ export async function addRating(req, res) {
       ELSE
       BEGIN
         INSERT INTO Ratings (id, deck_id, user_id, rating_val, outdated) VALUES (@id, @deck_id, @user_id, @rating_val, @outdated)
+        UPDATE Decks SET num_ratings=num_ratings + 1 WHERE id=@deck_id
       END
       `
     );
-    // TODO: update average rating
     const updateAvg = db.request();
     updateAvg.input('deck_id', sql.UniqueIdentifier, deckId);
     const avgResult = await updateAvg.query(
@@ -56,7 +56,7 @@ export async function addRating(req, res) {
     const rowsAffectedAvg = avgResult.rowsAffected[0];
     res.status(201).json({ rowsAffected, rowsAffectedAvg });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err?.message });
-    return;
   }
 }

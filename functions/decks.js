@@ -62,15 +62,13 @@ export async function addDeck(req, res) {
     request.input('owner', sql.NVarChar(255), req.decodedToken.user_id);
     request.input('commander', sql.UniqueIdentifier, commanderId[0].id);
     request.input('deck_name', sql.NVarChar(255), deck.deck_name);
-    request.input('avg_rating', sql.Int, deck.avg_rating);
-    request.input('num_ratings', sql.Int, deck.num_ratings);
     request.input('decklist_url', sql.NVarChar(255), deck.decklist_url);
     request.input('partner', sql.UniqueIdentifier, deck.partner && partnerId[0].id);
     request.input('timestamp', sql.BigInt, deck.timestamp);
 
     const result = await request.query(
       `INSERT INTO Decks (id, owner, commander, deck_name, avg_rating, num_ratings, decklist_url, partner, timestamp, which_art)
-      VALUES (@id, @owner, @commander, @deck_name, @avg_rating, @num_ratings, @decklist_url, @partner, @timestamp, 0)`
+      VALUES (@id, @owner, @commander, @deck_name, 0, 0, @decklist_url, @partner, @timestamp, 0)`
     );
 
     const rowsAffected = result.rowsAffected[0];
@@ -101,7 +99,6 @@ export async function toggleArtById(req, res) {
       // Array with each art of the commander of the deck
       const cards = result.recordsets[0];
       const which_art = (result.recordsets[1][0].which_art + 1) % cards.length;
-      console.log(cards[which_art].id)
       // Skip type verification for cards and which_art as both come directly from db
       await request.query(
         `UPDATE decks SET which_art = '${which_art}', commander = '${cards[which_art].id}' WHERE id = @deckId`
