@@ -6,7 +6,7 @@ import { getCardsFromName } from './cards.js';
 export async function getAllDecks(req, res) {
   try {
     const request = db.request();
-    const result = await request.query("SELECT * FROM Decks");
+    const result = await request.query("SELECT * FROM decks");
     const decks = result.recordsets;
     res.status(200).json(decks[0]);
   } catch (err) {
@@ -23,7 +23,7 @@ export async function getDeckById(req, res) {
       const request = db.request();
       request.input('id', sql.UniqueIdentifier, deckId);
       const result = await request.query(
-        `SELECT * FROM Decks WHERE id = @id`
+        `SELECT * FROM decks WHERE id = @id`
       );
       const deck = result.recordsets[0][0];
       if(!deck){
@@ -42,7 +42,7 @@ export async function getDecksByOwner(req, res) {
     const owner = req.params.owner;
     const request = db.request();
     request.input('owner', sql.NVarChar(255), owner);
-    const result = await request.query("SELECT * FROM Decks WHERE owner = @owner");
+    const result = await request.query("SELECT * FROM decks WHERE owner = @owner");
     const decks = result.recordsets;
     res.status(200).json(decks[0]);
   } catch (err) {
@@ -56,8 +56,8 @@ export async function addDeck(req, res) {
     const commanderId = await getCardsFromName(deck.commander);
     const partnerId = deck.partner && await getCardsFromName(deck.partner);
     const request = db.request();
-    // TODO generate unique identifier instead of getting it from the body
-    request.input('id', sql.UniqueIdentifier, uuid());
+    const _uuid = uuid();
+    request.input('id', sql.UniqueIdentifier, _uuid);
     // TODO change owner to a more proper datatype to store firebase user id 
     request.input('owner', sql.NVarChar(255), req.decodedToken.user_id);
     request.input('commander', sql.UniqueIdentifier, commanderId[0].id);
@@ -67,13 +67,11 @@ export async function addDeck(req, res) {
     request.input('timestamp', sql.BigInt, deck.timestamp);
 
     const result = await request.query(
-      `INSERT INTO Decks (id, owner, commander, deck_name, avg_rating, num_ratings, decklist_url, partner, timestamp, which_art)
+      `INSERT INTO decks (id, owner, commander, deck_name, avg_rating, num_ratings, decklist_url, partner, timestamp, which_art)
       VALUES (@id, @owner, @commander, @deck_name, 0, 0, @decklist_url, @partner, @timestamp, 0)`
     );
 
-    const rowsAffected = result.rowsAffected[0];
-
-    res.status(201).json({ rowsAffected });
+    res.status(201).json({ id:_uuid });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err?.message });
