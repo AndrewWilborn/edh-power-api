@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const request = db.request();
-    await request.query("desc decks");
+    await request.query("");
     res.status(200).json({ message: "script run successfully"});
   } catch (err) {
     res.status(500).json({ error: err?.message });
@@ -56,7 +56,8 @@ const createDecks = `CREATE TABLE Decks (
   decklist_url varchar(255),
   has_partner bit,
   partner uniqueidentifier FOREIGN KEY REFERENCES Cards(id),
-  timestamp bigint
+  timestamp bigint,
+  which_art tinyint
 )`
 
 // Structure for creating ratings table

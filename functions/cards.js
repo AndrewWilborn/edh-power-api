@@ -30,33 +30,14 @@ export async function getCardById(req, res){
   }
 }
 
-export async function getCardsByName(req, res){
-  try{
-    const cardName = req.params.name;
-    if(!cardName){
-      res.status(404);
-    } else {
-      const request = db.request();
-      request.input('name', sql.NVarChar(192), cardName);
-      const result = await request.query(
-        `SELECT * FROM Cards WHERE name = @name`
-      );
-      const cards = result.recordsets[0];
-      res.status(200).json(cards);
-    }
-  } catch (err) {
-    res.status(500).json({ error: err?.message });
-  }
-}
-
-export async function getCardIdFromName(name){
+export async function getCardsFromName(name){
   try{
     const request = db.request();
     request.input('name', sql.NVarChar(192), name);
     const result = await request.query(
       `SELECT * FROM Cards WHERE name = @name`
     );
-    const cardId = result.recordsets[0][0].id;
+    const cardId = result.recordsets[0];
     return cardId;
   } catch (err) {
     throw err;
