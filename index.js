@@ -2,18 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import openapi from './swagger/openapi.js';
 import { addDeck, getAllDecks, getDeckById, getDecksByOwner } from './functions/decks.js';
-import { addCard, getAllCards, getCardById } from './functions/cards.js';
+import { addCard, getAllCards, getCardById, getCardsByName } from './functions/cards.js';
 import dev from './dev_scripts/tables.js';
 import { validToken } from './functions/tokenVerify.js';
 import { addRating, getAllRatings } from './functions/ratings.js';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5001;
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // TODO: make this route admin only
-// app.use('/dev', dev);
+app.use('/dev', dev);
 
 app.get('/decks', getAllDecks);
 app.get('/deckById/:id', getDeckById);
@@ -22,6 +22,7 @@ app.post('/decks', validToken, addDeck);
 
 // app.get('/cards', getAllCards);
 app.get('/cards/:id', getCardById);
+app.get('/cardsByName/:name', getCardsByName);
 // TODO: make this route admin only
 // app.post('/cards', addCard);
 

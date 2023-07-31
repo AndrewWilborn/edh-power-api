@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const request = db.request();
-    await request.query(createRatings);
+    await request.query("desc decks");
     res.status(200).json({ message: "script run successfully"});
   } catch (err) {
     res.status(500).json({ error: err?.message });

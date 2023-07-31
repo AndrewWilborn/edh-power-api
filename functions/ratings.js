@@ -56,7 +56,6 @@ export async function addRating(req, res) {
     const rowsAffectedAvg = avgResult.rowsAffected[0];
     res.status(201).json({ rowsAffected, rowsAffectedAvg });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ error: err?.message });
     return;
   }
