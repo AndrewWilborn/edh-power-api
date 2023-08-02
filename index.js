@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import openapi from './swagger/openapi.js';
-import { addDeck, getAllDecks, getDeckById, getDecksByOwner, toggleArtById } from './functions/decks.js';
+import { addDeck, deleteDeck, getAllDecks, getDeckById, getDecksByOwner, toggleArtById, updateDeck } from './functions/decks.js';
 import { addCard, getAllCards, getCardById } from './functions/cards.js';
 import dev from './dev_scripts/tables.js';
 import { validToken } from './functions/tokenVerify.js';
@@ -20,6 +20,8 @@ app.get('/deckById/:id', getDeckById);
 app.get('/decks/:owner', getDecksByOwner);
 app.post('/decks', validToken, addDeck);
 app.get('/toggleArt/:id', toggleArtById);
+app.patch('/decks/:id', validToken, updateDeck);
+app.delete('/decks/:id', validToken, deleteDeck)
 
 // app.get('/cards', getAllCards);
 app.get('/cards/:id', getCardById);

@@ -27,7 +27,7 @@ export async function getDeckById(req, res) {
         `SELECT commander, deck_name, avg_rating, num_ratings, decklist_url, partner, timestamp, which_art FROM decks WHERE id = @id`
       );
       const deck = result.recordsets[0][0];
-      if(!deck){
+      if (!deck) {
         res.status(404);
       }
       res.status(200).json(deck);
@@ -72,7 +72,7 @@ export async function addDeck(req, res) {
       VALUES (@id, @owner, @commander, @deck_name, 0, 0, @decklist_url, @partner, @timestamp, 0)`
     );
 
-    res.status(201).json({ id:_uuid });
+    res.status(201).json({ id: _uuid });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: err?.message });
@@ -103,6 +103,48 @@ export async function toggleArtById(req, res) {
         `UPDATE decks SET which_art = '${which_art}', commander = '${cards[which_art].id}' WHERE id = @deckId`
       )
       res.status(201).json({ newId: cards[which_art].id })
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err?.message });
+  }
+}
+
+export async function updateDeck(req, res) {
+  try {
+    const uid = req.decodedToken.user_id;
+    const deckId = req.params.id;
+    if (!(uid && deckId)) {
+      res.status(404);
+    } else {
+
+    }
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err?.message });
+  }
+}
+
+export async function deleteDeck(req, res) {
+  try {
+    const uid = req.decodedToken.user_id;
+    const deckId = req.params.id;
+    if (!(uid && deckId)) {
+      res.status(404);
+    } else {
+      const request = db.request();
+      request.input('deckId', sql.UniqueIdentifier, deckId);
+      request.input('userId', sql.NVarChar(255), uid);
+      const result = await request.query(`
+        IF(@userId = (SELECT owner FROM decks WHERE id=@deckId))
+        BEGIN
+        DELETE FROM ratings WHERE deck_id=@deckId
+        DELETE FROM decks WHERE id=@deckId
+        END
+      `)
+      const rowsAffected = result.recordsets[0];
+      res.status(201).json({ rowsAffected });
     }
   } catch (err) {
     console.log(err);
