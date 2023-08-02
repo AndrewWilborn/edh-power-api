@@ -6,10 +6,11 @@ import { getCardsFromName } from './cards.js';
 export async function getAllDecks(req, res) {
   try {
     const request = db.request();
-    const result = await request.query("SELECT * FROM decks");
+    const result = await request.query("SELECT commander, deck_name, avg_rating, num_ratings, decklist_url, partner, timestamp, which_art FROM decks");
     const decks = result.recordsets;
     res.status(200).json(decks[0]);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: err?.message });
   }
 }
@@ -23,7 +24,7 @@ export async function getDeckById(req, res) {
       const request = db.request();
       request.input('id', sql.UniqueIdentifier, deckId);
       const result = await request.query(
-        `SELECT * FROM decks WHERE id = @id`
+        `SELECT commander, deck_name, avg_rating, num_ratings, decklist_url, partner, timestamp, which_art FROM decks WHERE id = @id`
       );
       const deck = result.recordsets[0][0];
       if(!deck){
