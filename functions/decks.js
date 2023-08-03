@@ -51,11 +51,25 @@ export async function getDecksByOwner(req, res) {
   }
 }
 
+function validateUrl(url){
+  if(url.startsWith('https://www.moxfield.com/') 
+  || url.startsWith('https://www.archidekt.com/') 
+  || url.startsWith('https://tappedout.net/')
+  || url.startsWith('https://deckstats.net/')
+  || url.startsWith('https://www.mtggoldfish.com/')){
+    return url
+  }
+  else {
+    return null
+  }
+}
+
 export async function addDeck(req, res) {
   try {
     const deck = req.body;
     const commanderId = await getCardsFromName(deck.commander);
     const partnerId = deck.partner && await getCardsFromName(deck.partner);
+    deck.decklist_url = validateUrl(deck.decklist_url)
     const request = db.request();
     const _uuid = uuid();
     request.input('id', sql.UniqueIdentifier, _uuid);
