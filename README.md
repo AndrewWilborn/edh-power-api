@@ -9,6 +9,6 @@ The api was built using Node.js, Express and MSSQL.  The database is hosted on A
 ## Website
 [Click here to view the site!](https://edh-power.web.app/)
 
-## Backend Repo
-[Click here to view the code for the backend](https://github.com/AndrewWilborn/edh-power-api)
+## Frontend Repo
+[Click here to view the code for the backend](https://github.com/AndrewWilborn/edh-power-app)
 
